@@ -7,7 +7,12 @@ from app.services.tmdb import TMDB
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("home_movie.html")
+
+
+@app.route("/<string:page_name>")
+def html_page(page_name):
+    return render_template(page_name)
 
 
 @app.route("/search")

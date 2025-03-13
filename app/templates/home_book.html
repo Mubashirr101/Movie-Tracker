@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MTrac - Movie & Show Tracker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        background-color: #0f0f0f;
+        color: white;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #333;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #e50914;
+      }
+
+      .nav-tabs {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .tab {
+        color: #888;
+        cursor: pointer;
+        transition: color 0.3s;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+      }
+
+      .tab.active {
+        color: white;
+        background-color: #333;
+      }
+
+      .hamburger {
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        margin: 4px 0;
+      }
+
+      .content-section {
+        padding: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-row {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .movie-card {
+        min-width: 200px;
+        background-color: #1a1a1a;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s;
+      }
+
+      .movie-card:hover {
+        transform: translateY(-5px);
+        cursor: pointer;
+      }
+
+      .card-image {
+        height: 300px;
+        background-color: #333;
+        background-image: url("https://via.placeholder.com/200x300");
+        background-size: cover;
+      }
+
+      .card-info {
+        padding: 1rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-meta {
+        color: #888;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">MTrac</div>
+      <div class="nav-tabs">
+        <div class="tab">Movies</div>
+        <div class="tab">Shows</div>
+        <div class="tab active">Books</div>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+
+    <main class="content-section">
+      <!-- Recommended Section -->
+      <h2 class="section-title">Recommended for You</h2>
+      <div class="card-row">
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">The Godfather</div>
+            <div class="card-meta">Crime • 1972</div>
+          </div>
+        </div>
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">The Godfather: Part II</div>
+            <div class="card-meta">Crime • 1974</div>
+          </div>
+        </div>
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">The Lord of the Rings</div>
+            <div class="card-meta">Fantasy • 2001</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Genre Section -->
+      <h2 class="section-title">Action & Adventure</h2>
+      <div class="card-row">
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">Fast & Furious: Tokyo Drift</div>
+            <div class="card-meta">Action • 2006</div>
+          </div>
+        </div>
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">Harry Potter Series</div>
+            <div class="card-meta">Fantasy • 2001-2011</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
