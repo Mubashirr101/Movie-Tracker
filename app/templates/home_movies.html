@@ -119,9 +119,9 @@
     <nav class="navbar">
       <div class="logo">MTrac</div>
       <div class="nav-tabs">
-        <div class="tab">Movies</div>
-        <div class="tab active">Shows</div>
-        <div class="tab">Books</div>
+        <a href="/home_movies" class="tab active">Movies</a>
+        <a href="/home_shows" class="tab">Shows</a>
+        <a href="/home_books" class="tab">Books</a>
       </div>
       <div class="hamburger">
         <span></span>
@@ -137,44 +137,55 @@
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">Game of Thrones</div>
-            <div class="card-meta">Epic Fantasy • 2011</div>
+            <div class="card-title">The Godfather</div>
+            <div class="card-meta">Crime • 1972</div>
           </div>
         </div>
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">House of the dragon</div>
-            <div class="card-meta">Epic Fantasy • 2022</div>
+            <div class="card-title">The Godfather: Part II</div>
+            <div class="card-meta">Crime • 1974</div>
           </div>
         </div>
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">Peaky Blinders</div>
-            <div class="card-meta">Crime • 2013</div>
+            <div class="card-title">The Lord of the Rings</div>
+            <div class="card-meta">Fantasy • 2001</div>
           </div>
         </div>
       </div>
 
       <!-- Genre Section -->
-      <h2 class="section-title">Genre</h2>
+      <h2 class="section-title">Action & Adventure</h2>
       <div class="card-row">
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">Reacher</div>
-            <div class="card-meta">Action • 2022</div>
+            <div class="card-title">Fast & Furious: Tokyo Drift</div>
+            <div class="card-meta">Action • 2006</div>
           </div>
         </div>
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">The Vampire Diaries</div>
-            <div class="card-meta">Romance • 2009</div>
+            <div class="card-title">Harry Potter Series</div>
+            <div class="card-meta">Fantasy • 2001-2011</div>
           </div>
         </div>
       </div>
     </main>
+    <script>
+      // JavaScript to handle active tab
+      document.querySelectorAll(".nav-tabs .tab").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          document
+            .querySelectorAll(".nav-tabs .tab")
+            .forEach((t) => t.classList.remove("active"));
+          this.classList.add("active");
+        });
+      });
+    </script>
   </body>
 </html>

@@ -7,12 +7,18 @@ from app.services.tmdb import TMDB
 
 @app.route("/")
 def index():
-    return render_template("home_movie.html")
+    return render_template("home_movies.html")
 
 
 @app.route("/<string:page_name>")
 def html_page(page_name):
-    return render_template(page_name)
+    name = f"{page_name}.html"
+    print(name)
+    if name in os.listdir("app/templates"):
+        return render_template(name)
+    else:
+        print(f"no such page: {name}")
+        return "404 Page Not Found"
 
 
 @app.route("/search")

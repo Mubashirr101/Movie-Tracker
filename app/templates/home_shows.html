@@ -119,9 +119,9 @@
     <nav class="navbar">
       <div class="logo">MTrac</div>
       <div class="nav-tabs">
-        <div class="tab">Movies</div>
-        <div class="tab">Shows</div>
-        <div class="tab active">Books</div>
+        <a href="/home_movies" class="tab">Movies</a>
+        <a href="/home_shows" class="tab active">Shows</a>
+        <a href="/home_books" class="tab">Books</a>
       </div>
       <div class="hamburger">
         <span></span>
@@ -132,63 +132,60 @@
 
     <main class="content-section">
       <!-- Recommended Section -->
-      <h2 class="section-title">Fiction</h2>
+      <h2 class="section-title">Recommended for You</h2>
       <div class="card-row">
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">A Game of Thrones</div>
-            <div class="card-meta">Epic Fantasy • 1996</div>
-          </div>
-        </div>
-        <div class="movie-card">
-          <div class="card-image"></div>
-          <div class="card-info">
-            <div class="card-title">A Clash of Kings</div>
-            <div class="card-meta">Epic Fantasy • 1998</div>
-          </div>
-        </div>
-        <div class="movie-card">
-          <div class="card-image"></div>
-          <div class="card-info">
-            <div class="card-title">A Storm of Swords</div>
-            <div class="card-meta">Epic Fantasy • 2000</div>
-          </div>
-        </div>
-        <div class="movie-card">
-          <div class="card-image"></div>
-          <div class="card-info">
-            <div class="card-title">A Feast for Crows</div>
-            <div class="card-meta">Epic Fantasy • 2005</div>
-          </div>
-        </div>
-        <div class="movie-card">
-          <div class="card-image"></div>
-          <div class="card-info">
-            <div class="card-title">A Dance of Dragons</div>
+            <div class="card-title">Game of Thrones</div>
             <div class="card-meta">Epic Fantasy • 2011</div>
+          </div>
+        </div>
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">House of the dragon</div>
+            <div class="card-meta">Epic Fantasy • 2022</div>
+          </div>
+        </div>
+        <div class="movie-card">
+          <div class="card-image"></div>
+          <div class="card-info">
+            <div class="card-title">Peaky Blinders</div>
+            <div class="card-meta">Crime • 2013</div>
           </div>
         </div>
       </div>
 
       <!-- Genre Section -->
-      <h2 class="section-title">Non-Fiction</h2>
+      <h2 class="section-title">Genre</h2>
       <div class="card-row">
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">Atomic Habits</div>
-            <div class="card-meta">Self Help • 2018</div>
+            <div class="card-title">Reacher</div>
+            <div class="card-meta">Action • 2022</div>
           </div>
         </div>
         <div class="movie-card">
           <div class="card-image"></div>
           <div class="card-info">
-            <div class="card-title">48 Laws of Power</div>
-            <div class="card-meta">Philosophy • 1998</div>
+            <div class="card-title">The Vampire Diaries</div>
+            <div class="card-meta">Romance • 2009</div>
           </div>
         </div>
       </div>
     </main>
+    <script>
+      // JavaScript to handle active tab
+      document.querySelectorAll(".nav-tabs .tab").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          document
+            .querySelectorAll(".nav-tabs .tab")
+            .forEach((t) => t.classList.remove("active"));
+          this.classList.add("active");
+        });
+      });
+    </script>
   </body>
 </html>
