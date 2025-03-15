@@ -176,16 +176,5 @@
         </div>
       </div>
     </main>
-    <script>
-      // JavaScript to handle active tab
-      document.querySelectorAll(".nav-tabs .tab").forEach((tab) => {
-        tab.addEventListener("click", function () {
-          document
-            .querySelectorAll(".nav-tabs .tab")
-            .forEach((t) => t.classList.remove("active"));
-          this.classList.add("active");
-        });
-      });
-    </script>
   </body>
 </html>
