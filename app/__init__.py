@@ -7,5 +7,6 @@ from app.services.tmdb import TMDB
 load_dotenv()
 app = Flask(__name__)
 app.config["TMDB_API_KEY"] = os.getenv("TMDB_API_KEY")
+app.config["GOODREADS_API_KEY"] = os.getenv("GOODREADS_API_KEY")
 
 from app import routes

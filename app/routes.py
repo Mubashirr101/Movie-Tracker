@@ -7,11 +7,18 @@ from app.services.tmdb import TMDB
 
 @app.route("/")
 def index():
+    tmdb = TMDB(app.config["TMDB_API_KEY"])
+    # popular_movies = tmdb.get_popular_movies()
     return render_template("home_movies.html")
 
 
 @app.route("/<string:page_name>")
 def html_page(page_name):
+    tmdb = TMDB(app.config["TMDB_API_KEY"])
+    # bookdb = BookDB(app.config["GOODREADS_API_KEY"])
+    # popular_movies = tmdb.get_popular_movies()
+    # popular_shows = tmdb.get_popular_shows()
+    # popular_books = bookdb.get_popular_books()
     name = f"{page_name}.html"
     print(name)
     if name in os.listdir("app/templates"):

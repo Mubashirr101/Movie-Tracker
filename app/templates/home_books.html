@@ -32,6 +32,29 @@
         color: #e50914;
       }
 
+      .search-form {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .search-input {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: none;
+        background-color: #333;
+        color: white;
+      }
+
+      .search-button {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: none;
+        background-color: #e50914;
+        color: white;
+        cursor: pointer;
+      }
+
       .nav-tabs {
         display: flex;
         gap: 2rem;
@@ -118,6 +141,15 @@
   <body>
     <nav class="navbar">
       <div class="logo">MTrac</div>
+      <form class="search-form" action="/search" method="GET">
+        <input
+          type="text"
+          name="q"
+          class="search-input"
+          placeholder="Search..."
+        />
+        <button type="submit" class="search-button">Search</button>
+      </form>
       <div class="nav-tabs">
         <a href="/home_movies" class="tab">Movies</a>
         <a href="/home_shows" class="tab">Shows</a>
