@@ -28,6 +28,11 @@ def html_page(page_name):
         return "404 Page Not Found"
 
 
+@app.route("/test_1")
+def test_1():
+    return render_template("test_1.html")
+
+
 @app.route("/search")
 def search_movies():
     query = request.args.get("q")

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<script>
+  function getbooks() {
+    document.getElementById("output").innerHTML = "";
+    fetch(
+      "https://openlibrary.org/search.json?q=" +
+        document.getElementById("input").value
+    )
+      .then((a) => a.json())
+      .then((response) => {
+        for (var i = 0; i < response.docs.length; i++) {
+          document.getElementById("output").innerHTML +=
+            "<h2>" +
+            response.docs[i].title +
+            "</h2>" +
+            response.docs[i].author_name[0] +
+            "<br><img src='https://covers.openlibrary.org/a/olid/" +
+            response.docs[i].cover_edition_key +
+            ".jpg'><br>";
+        }
+      });
+  }
+</script>
+
+<input type="text" id="input" placeholder="Search for a book..." />
+<button onclick="getbooks()">Search</button><br />
+<div id="output"></div>
