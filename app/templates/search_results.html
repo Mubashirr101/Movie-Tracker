@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results</title>
+    <style>
+      body {
+        background-color: #0f0f0f;
+        color: white;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .card-row {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .book-card {
+        display: flexbox;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out, box-shodow 0.3s ease-in-out;
+        justify-content: space-around;
+      }
+
+      .book-card:hover {
+        transform: translateY(-8px);
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+      }
+      .card-image {
+        width: 100%;
+        height: 350px;
+        background: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .card-info {
+        text-align: center;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        justify-content: space-around;
+      }
+
+      .card-meta {
+        color: #bbb;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Search Results</h1>
+    <div id="output" class="card-row"></div>
+
+    <script>
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      function getBooks() {
+        const query = getQueryParam("q");
+        if (!query) {
+          document.getElementById("output").innerHTML =
+            "<p>No search term provided.</p>";
+          return;
+        }
+
+        document.getElementById("output").innerHTML = "Loading...";
+        fetch(
+          "https://openlibrary.org/search.json?q=" + encodeURIComponent(query)
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("output").innerHTML = "";
+            if (data.docs.length === 0) {
+              document.getElementById("output").innerHTML =
+                "<p>No books found.</p>";
+              return;
+            }
+
+            data.docs.forEach((book) => {
+              const author = book.author_name
+                ? book.author_name[0]
+                : "Unknown Author";
+              const cover = book.cover_edition_key
+                ? `https://covers.openlibrary.org/b/olid/${book.cover_edition_key}-M.jpg`
+                : "https://via.placeholder.com/150?text=No+Cover";
+
+              document.getElementById("output").innerHTML += `                
+                  <div class="book-card">
+                    <div class="card-image"><img src="${cover}" alt="Book Cover"></div>
+                    <div class="card-info>"
+                      <div class="card-title">${book.title}</div>
+                      <div class="card-meta">${author}</div>
+                    </div>
+                  </div>`;
+            });
+          })
+          .catch((error) => console.log("Error fetching books:", error));
+      }
+
+      window.onload = getBooks;
+    </script>
+  </body>
+</html>

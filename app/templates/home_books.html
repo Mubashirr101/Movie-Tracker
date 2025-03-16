@@ -141,16 +141,15 @@
   <body>
     <nav class="navbar">
       <div class="logo">MTrac</div>
-      <form class="search-form" action="/search" method="GET">
+      <form class="search-form" action="/search_results" method="GET">
         <input
+          id="input"
           type="text"
           name="q"
           class="search-input"
           placeholder="Search..."
         />
-        <button onclick="getbooks()" type="submit" class="search-button">
-          Search
-        </button>
+        <button type="submit" class="search-button">Search</button>
       </form>
       <div class="nav-tabs">
         <a href="/home_movies" class="tab">Movies</a>
@@ -225,38 +224,5 @@
       </div>
       <div id="output"></div>
     </main>
-    <script>
-      function getbooks() {
-        document.getElementById("output").innerHTML = "";
-        fetch(
-          "https://openlibrary.org/search.json?q=" +
-            encodeURIComponent(document.getElementById("input").value)
-        )
-          .then((a) => a.json())
-          .then((response) => {
-            for (var i = 0; i < response.docs.length; i++) {
-              document.getElementById("output").innerHTML +=
-                "<h2>" +
-                response.docs[i].title +
-                "</h2>" +
-                (response.docs[i].author_name
-                  ? response.docs[i].author_name[0]
-                  : "Unknown Author") +
-                "<br>";
-
-              if (response.docs[i].cover_edition_key) {
-                document.getElementById("output").innerHTML +=
-                  "<img src='https://covers.openlibrary.org/b/olid/" +
-                  response.docs[i].cover_edition_key +
-                  "-M.jpg'><br>";
-              } else {
-                document.getElementById("output").innerHTML +=
-                  "<br>No cover available<br>";
-              }
-            }
-          })
-          .catch((error) => console.log("Error fetching data: ", error));
-      }
-    </script>
   </body>
 </html>
