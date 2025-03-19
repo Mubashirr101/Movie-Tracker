@@ -79,6 +79,11 @@
         return urlParams.get(param);
       }
 
+      function chooseMedia() {
+        const mediaType = getQueryParam("media");
+        const query = getQueryParam("q");
+      }
+
       function getBooks() {
         const query = getQueryParam("q");
         if (!query) {

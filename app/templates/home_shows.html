@@ -141,13 +141,20 @@
   <body>
     <nav class="navbar">
       <div class="logo">MTrac</div>
-      <form class="search-form" action="/search" method="GET">
+      <form
+        class="search-form"
+        action="/search_results"
+        method="GET"
+        onsubmit="setMediaType('shows')"
+      >
         <input
+          id="input"
           type="text"
           name="q"
           class="search-input"
           placeholder="Search..."
         />
+        <input type="hidden" name="media" id="media-type" value="" />
         <button type="submit" class="search-button">Search</button>
       </form>
       <div class="nav-tabs">
@@ -208,5 +215,10 @@
         </div>
       </div>
     </main>
+    <script>
+      function setMediaType(type) {
+        document.getElementById("media-type").value = type;
+      }
+    </script>
   </body>
 </html>
