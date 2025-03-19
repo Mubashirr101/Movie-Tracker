@@ -82,10 +82,6 @@
       function chooseMedia() {
         const mediaType = getQueryParam("media");
         const query = getQueryParam("q");
-      }
-
-      function getBooks() {
-        const query = getQueryParam("q");
         if (!query) {
           document.getElementById("output").innerHTML =
             "<p>No search term provided.</p>";
@@ -93,40 +89,85 @@
         }
 
         document.getElementById("output").innerHTML = "Loading...";
-        fetch(
-          "https://openlibrary.org/search.json?q=" + encodeURIComponent(query)
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("output").innerHTML = "";
-            if (data.docs.length === 0) {
-              document.getElementById("output").innerHTML =
-                "<p>No books found.</p>";
-              return;
-            }
 
-            data.docs.forEach((book) => {
-              const author = book.author_name
-                ? book.author_name[0]
-                : "Unknown Author";
-              const cover = book.cover_edition_key
-                ? `https://covers.openlibrary.org/b/olid/${book.cover_edition_key}-M.jpg`
-                : "https://via.placeholder.com/150?text=No+Cover";
-
-              document.getElementById("output").innerHTML += `                
-                  <div class="book-card">
-                    <div class="card-image"><img src="${cover}" alt="Book Cover"></div>
-                    <div class="card-info>"
-                      <div class="card-title">${book.title}</div>
-                      <div class="card-meta">${author}</div>
-                    </div>
-                  </div>`;
-            });
-          })
-          .catch((error) => console.log("Error fetching books:", error));
+        switch (mediaType) {
+          case "books":
+            fetchBooks(query);
+            break;
+          case "movies":
+            fetchMovies(query);
+            break;
+          case "shows":
+            fetchShows(query);
+            break;
+          default:
+            document.getElementById("output").innerHTML =
+              "<p>Invalid media type. </p>";
+        }
       }
 
-      window.onload = getBooks;
+      function fetchBooks() {
+        fetch(
+          "https://openlibrary.org/search.json?q=${encodeURIComponent(query)}"
+        )
+          .then((response) => response.json())
+          .then((data) => displayResults(data.docs, "book"))
+          .catch((error) => console.log("Error fetching books:", error));
+      }
+      function fetchMovies(query) {
+        fetch("<link>{encodeURIComponent(query)}")
+          .then((response) => response.json())
+          .then((data) => displayResults(data.docs, "movie"))
+          .catch((error) => console.log("Error fetching movies:", error));
+      }
+      function fetchShows(query) {
+        fetch("<link>{encodeURIComponent(query)}")
+          .then((response) => response.json())
+          .then((data) => displayResults(data.docs, "show"))
+          .catch((error) => console.log("Error fetching shows:", error));
+      }
+
+      function displayResults(items, type) {
+        document.getElementById("output").innerHTML = "";
+
+        if (!items || items.length === 0) {
+          document.getElementById("output").innerHTML =
+            "<p>No ${type}s found.</p>";
+          return;
+        }
+
+        items.forEach((item) => {
+          let title = "";
+          let cover = "";
+          let meta = "";
+
+          if (type === "book") {
+            title = item.titlel;
+            meta = item.author_name ? item.author_name[0] : "Unknown Author";
+            cover = item.cover_edition_key
+              ? "https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg"
+              : "https://via.placeholder.com/150?text=No+Cover";
+          } else if (type === "movie") {
+            title = item.Title;
+            meta = "Year:${item.Year}";
+            cover =
+              item.Poster !== "N/A"
+                ? item.Poster
+                : "https://via.placeholder.com/150?text=No+Cover";
+          } else if (type === "show") {
+            title = item.show.name;
+            meta = 'Rating:${item.show.rating.average || "N/A"}';
+            cover - item.show.image
+              ? item.show.image.medium
+              : "https://via.placeholder.com/150?text=No+Cover";
+          }
+
+          document.getElementById("output").innerHTML +=
+            '<div class ="media-card"><div class="card-image"><img src="${cover}" alt = "${title} Cover"><div><div class = "card-card-info"><div class = "card-title">${title}</div><div class="card-meta">${meta}</div></div></div>';
+        });
+      }
+
+      window.onload = chooseMedia;
     </script>
   </body>
 </html>
