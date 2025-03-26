@@ -22,17 +22,15 @@
         padding-bottom: 1rem;
         margin-bottom: 2rem;
       }
-
-      .book-card {
-        display: flexbox;
+      .media-card {
+        display: flex;
+        flex-direction: column;
         background-color: #1a1a1a;
         border-radius: 10px;
         overflow: hidden;
-        transition: transform 0.3s ease-in-out, box-shodow 0.3s ease-in-out;
-        justify-content: space-around;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
       }
-
-      .book-card:hover {
+      .media-card:hover {
         transform: translateY(-8px);
         cursor: pointer;
         box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
@@ -45,24 +43,20 @@
         justify-content: center;
         align-items: center;
       }
-
       .card-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-
       .card-info {
         text-align: center;
+        padding: 15px;
       }
-
       .card-title {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: bold;
         margin-bottom: 0.5rem;
-        justify-content: space-around;
       }
-
       .card-meta {
         color: #bbb;
         font-size: 0.9rem;
@@ -74,6 +68,8 @@
     <div id="output" class="card-row"></div>
 
     <script>
+      const TMDB_API_KEY = "{{ tmdb_api_key }}";
+
       function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -82,6 +78,7 @@
       function chooseMedia() {
         const mediaType = getQueryParam("media");
         const query = getQueryParam("q");
+
         if (!query) {
           document.getElementById("output").innerHTML =
             "<p>No search term provided.</p>";
@@ -102,28 +99,38 @@
             break;
           default:
             document.getElementById("output").innerHTML =
-              "<p>Invalid media type. </p>";
+              "<p>Invalid media type.</p>";
         }
       }
 
-      function fetchBooks() {
+      function fetchBooks(query) {
         fetch(
-          "https://openlibrary.org/search.json?q=${encodeURIComponent(query)}"
+          `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`
         )
           .then((response) => response.json())
           .then((data) => displayResults(data.docs, "book"))
           .catch((error) => console.log("Error fetching books:", error));
       }
+
       function fetchMovies(query) {
-        fetch("<link>{encodeURIComponent(query)}")
+        fetch(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            query
+          )}&api_key=${TMDB_API_KEY}`
+        )
           .then((response) => response.json())
-          .then((data) => displayResults(data.docs, "movie"))
+          .then((data) => displayResults(data.results, "movie"))
           .catch((error) => console.log("Error fetching movies:", error));
       }
+
       function fetchShows(query) {
-        fetch("<link>{encodeURIComponent(query)}")
+        fetch(
+          `https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(
+            query
+          )}&api_key=${TMDB_API_KEY}`
+        )
           .then((response) => response.json())
-          .then((data) => displayResults(data.docs, "show"))
+          .then((data) => displayResults(data.results, "show"))
           .catch((error) => console.log("Error fetching shows:", error));
       }
 
@@ -131,8 +138,9 @@
         document.getElementById("output").innerHTML = "";
 
         if (!items || items.length === 0) {
-          document.getElementById("output").innerHTML =
-            "<p>No ${type}s found.</p>";
+          document.getElementById(
+            "output"
+          ).innerHTML = `<p>No ${type}s found.</p>`;
           return;
         }
 
@@ -142,28 +150,35 @@
           let meta = "";
 
           if (type === "book") {
-            title = item.titlel;
+            title = item.title;
             meta = item.author_name ? item.author_name[0] : "Unknown Author";
             cover = item.cover_edition_key
-              ? "https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg"
+              ? `https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`
               : "https://via.placeholder.com/150?text=No+Cover";
           } else if (type === "movie") {
-            title = item.Title;
-            meta = "Year:${item.Year}";
-            cover =
-              item.Poster !== "N/A"
-                ? item.Poster
-                : "https://via.placeholder.com/150?text=No+Cover";
+            title = item.title;
+            meta = `Release Date: ${item.release_date || "N/A"}`;
+            cover = item.poster_path
+              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+              : "https://via.placeholder.com/150?text=No+Cover";
           } else if (type === "show") {
-            title = item.show.name;
-            meta = 'Rating:${item.show.rating.average || "N/A"}';
-            cover - item.show.image
-              ? item.show.image.medium
+            title = item.name;
+            meta = `First Air Date: ${item.first_air_date || "N/A"}`;
+            cover = item.poster_path
+              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
               : "https://via.placeholder.com/150?text=No+Cover";
           }
 
-          document.getElementById("output").innerHTML +=
-            '<div class ="media-card"><div class="card-image"><img src="${cover}" alt = "${title} Cover"><div><div class = "card-card-info"><div class = "card-title">${title}</div><div class="card-meta">${meta}</div></div></div>';
+          document.getElementById("output").innerHTML += `
+            <div class="media-card">
+              <div class="card-image">
+                <img src="${cover}" alt="${title} Cover">
+              </div>
+              <div class="card-info">
+                <div class="card-title">${title}</div>
+                <div class="card-meta">${meta}</div>
+              </div>
+            </div>`;
         });
       }
 

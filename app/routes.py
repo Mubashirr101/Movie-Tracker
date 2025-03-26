@@ -42,6 +42,12 @@ def search_movies():
     return jsonify(results)
 
 
+@app.route("/search_results")
+def search_results():
+    tmdb = app.config["TMDB_API_KEY"]
+    return render_template("search_results.html", tmdb_api_key=tmdb)
+
+
 @app.route("/movie/<int:movie_id>")
 def get_movie_details(movie_id):
     tmdb = TMDB(app.config["TMDB_API_KEY"])
