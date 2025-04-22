@@ -10,6 +10,7 @@
         color: white;
         font-family: Arial, sans-serif;
         padding: 20px;
+        margin: 0;
       }
       h1 {
         text-align: center;
@@ -18,11 +19,18 @@
       .card-row {
         display: grid;
         gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        ); /* Default responsive grid */
+        justify-content: center;
         padding-bottom: 1rem;
         margin-bottom: 2rem;
       }
       .media-card {
+        width: 100%; /* Allow cards to adapt to grid column size */
+        /* max-width: 220px; Maintain consistent max size */
+        aspect-ratio: 9 / 17;
         display: flex;
         flex-direction: column;
         background-color: #1a1a1a;
@@ -37,13 +45,18 @@
       }
       .card-image {
         width: 100%;
-        height: 350px;
+        /* height: 350px; */
+        aspect-ratio: 1 / 1.51;
         background: #333;
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
       }
       .card-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -51,15 +64,59 @@
       .card-info {
         text-align: center;
         padding: 15px;
+        flex-grow: 1; /* Ensure consistent spacing */
       }
       .card-title {
-        font-size: 1.2rem;
-        font-weight: bold;
+        font-size: 1rem;
+        font-style: bold;
         margin-bottom: 0.5rem;
       }
       .card-meta {
         color: #bbb;
         font-size: 0.9rem;
+      }
+
+      /* Tablet */
+      @media (max-width: 768px) {
+        .card-row {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1rem;
+        }
+        .card-title {
+          font-size: 0.8rem;
+        }
+        .card-meta {
+          font-size: 0rem;
+        }
+        .card-image {
+          aspect-ratio: 1 / 1.51;
+        }
+        .media-card {
+          aspect-ratio: 9 / 17;
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 480px) {
+        .card-row {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0.75rem;
+        }
+        .card-info {
+          padding: 10px 8px;
+        }
+        .card-title {
+          font-size: 0.5rem;
+        }
+        .card-meta {
+          font-size: 0em;
+        }
+        .card-image {
+          aspect-ratio: 1 / 1.51;
+        }
+        .media-card {
+          aspect-ratio: 9 / 17;
+        }
       }
     </style>
   </head>
