@@ -16,6 +16,22 @@
         text-align: center;
         margin-bottom: 20px;
       }
+      .back-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease;
+      }
+
+      .back-button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
       .card-row {
         display: grid;
         gap: 1.5rem;
@@ -132,6 +148,24 @@
     </style>
   </head>
   <body>
+    <button class="back-button" onclick="history.back()" aria-label="Go back">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="white"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15 18l-6-6 6-6"
+          stroke="white"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
     <h1>Search Results</h1>
     <div id="output" class="card-row"></div>
 
