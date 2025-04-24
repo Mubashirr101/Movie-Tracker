@@ -4,148 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Results</title>
-    <style>
-      body {
-        background-color: #0f0f0f;
-        color: white;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        margin: 0;
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .back-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s ease;
-      }
-
-      .back-button:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .card-row {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(
-          auto-fit,
-          minmax(220px, 1fr)
-        ); /* Default responsive grid */
-        justify-content: center;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-      }
-      .media-card {
-        width: 100%; /* Allow cards to adapt to grid column size */
-        /* max-width: 220px; Maintain consistent max size */
-        aspect-ratio: 9 / 17;
-        display: flex;
-        flex-direction: column;
-        background-color: #1a1a1a;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-      }
-      .media-card:hover {
-        transform: translateY(-8px);
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-      }
-      .card-image {
-        width: 100%;
-        /* height: 350px; */
-        aspect-ratio: 1 / 1.51;
-        background: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-      }
-      .card-image img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .card-info {
-        text-align: center;
-        /* padding: 15px; */
-        padding: 12px 10px;
-        flex-grow: 1; /* Ensure consistent spacing */
-        flex-direction: column;
-        justify-content: center;
-      }
-      .card-title {
-        font-size: clamp(0.75rem, 1.5vw, 1rem);
-        font-style: bold;
-        margin-bottom: 0.5rem;
-        line-height: 1.2em;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-      .card-meta {
-        color: #bbb;
-        font-size: 0.9rem;
-      }
-
-      /* Tablet */
-      @media (max-width: 768px) {
-        .card-row {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1rem;
-        }
-        .card-title {
-          /* font-size: 0.8rem; */
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-        }
-        .card-meta {
-          font-size: 0rem;
-        }
-        .card-image {
-          aspect-ratio: 1 / 1.51;
-        }
-        .media-card {
-          aspect-ratio: 9 / 17;
-        }
-      }
-
-      /* Mobile */
-      @media (max-width: 480px) {
-        .card-row {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.75rem;
-        }
-        .card-info {
-          padding: 10px 8px;
-        }
-        .card-title {
-          /* font-size: 0.5rem; */
-          font-weight: bold;
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-        }
-        .card-meta {
-          font-size: 0em;
-        }
-        .card-image {
-          aspect-ratio: 1 / 1.51;
-        }
-        .media-card {
-          aspect-ratio: 9 / 17;
-        }
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/search_style.css') }}"
+    />
   </head>
   <body>
     <button class="back-button" onclick="history.back()" aria-label="Go back">
@@ -169,122 +31,18 @@
     <h1>Search Results</h1>
     <div id="output" class="card-row"></div>
 
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Pass TMDB_API_KEY dynamically -->
     <script>
       const TMDB_API_KEY = "{{ tmdb_api_key }}";
-
-      function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-      }
-
-      function chooseMedia() {
-        const mediaType = getQueryParam("media");
-        const query = getQueryParam("q");
-
-        if (!query) {
-          document.getElementById("output").innerHTML =
-            "<p>No search term provided.</p>";
-          return;
-        }
-
-        document.getElementById("output").innerHTML = "Loading...";
-
-        switch (mediaType) {
-          case "books":
-            fetchBooks(query);
-            break;
-          case "movies":
-            fetchMovies(query);
-            break;
-          case "shows":
-            fetchShows(query);
-            break;
-          default:
-            document.getElementById("output").innerHTML =
-              "<p>Invalid media type.</p>";
-        }
-      }
-
-      function fetchBooks(query) {
-        fetch(
-          `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`
-        )
-          .then((response) => response.json())
-          .then((data) => displayResults(data.docs, "book"))
-          .catch((error) => console.log("Error fetching books:", error));
-      }
-
-      function fetchMovies(query) {
-        fetch(
-          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-            query
-          )}&api_key=${TMDB_API_KEY}`
-        )
-          .then((response) => response.json())
-          .then((data) => displayResults(data.results, "movie"))
-          .catch((error) => console.log("Error fetching movies:", error));
-      }
-
-      function fetchShows(query) {
-        fetch(
-          `https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(
-            query
-          )}&api_key=${TMDB_API_KEY}`
-        )
-          .then((response) => response.json())
-          .then((data) => displayResults(data.results, "show"))
-          .catch((error) => console.log("Error fetching shows:", error));
-      }
-
-      function displayResults(items, type) {
-        document.getElementById("output").innerHTML = "";
-
-        if (!items || items.length === 0) {
-          document.getElementById(
-            "output"
-          ).innerHTML = `<p>No ${type}s found.</p>`;
-          return;
-        }
-
-        items.forEach((item) => {
-          let title = "";
-          let cover = "";
-          let meta = "";
-
-          if (type === "book") {
-            title = item.title;
-            meta = item.author_name ? item.author_name[0] : "Unknown Author";
-            cover = item.cover_edition_key
-              ? `https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`
-              : "https://via.placeholder.com/150?text=No+Cover";
-          } else if (type === "movie") {
-            title = item.title;
-            meta = `Release Date: ${item.release_date || "N/A"}`;
-            cover = item.poster_path
-              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-              : "https://via.placeholder.com/150?text=No+Cover";
-          } else if (type === "show") {
-            title = item.name;
-            meta = `First Air Date: ${item.first_air_date || "N/A"}`;
-            cover = item.poster_path
-              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-              : "https://via.placeholder.com/150?text=No+Cover";
-          }
-
-          document.getElementById("output").innerHTML += `
-            <div class="media-card">
-              <div class="card-image">
-                <img src="${cover}" alt="${title} Cover">
-              </div>
-              <div class="card-info">
-                <div class="card-title">${title}</div>
-                <div class="card-meta">${meta}</div>
-              </div>
-            </div>`;
-        });
-      }
-
-      window.onload = chooseMedia;
     </script>
+    <script src="{{ url_for('static', filename='js/search_script.js') }}"></script>
   </body>
 </html>
