@@ -61,9 +61,6 @@ Prototype Design: [Figma](https://www.figma.com/proto/6f427QtVx5pyMF28piynW1/Mov
 - Include more APIs for diverse content.
 - Implement a database to store user preferences and history.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
 ## Acknowledgments
 - TMDB and OpenLibrary for their APIs.
 - Flask for providing a lightweight and flexible web framework.
