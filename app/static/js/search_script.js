@@ -71,9 +71,11 @@ function displayResults(items, type) {
   }
 
   items.forEach((item) => {
+    console.log(item);
     let title = "";
     let cover = "";
     let meta = "";
+    let lang = "";
     let description = "";
 
     if (type === "book") {
@@ -87,13 +89,16 @@ function displayResults(items, type) {
         : "No additional details available.";
     } else if (type === "movie") {
       title = item.title;
-      meta = `Release Date: ${item.release_date || "N/A"}`;
+      date = item.release_date;
+      meta = `${date.split("-")[0] || ""}`;
+      lang = item.original_language;
       cover = item.poster_path
         ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
         : "https://via.placeholder.com/150?text=No+Cover";
       description = item.overview || "No description available.";
     } else if (type === "show") {
       title = item.name;
+      lang = item.original_language;
       meta = `First Air Date: ${item.first_air_date || "N/A"}`;
       cover = item.poster_path
         ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
@@ -101,28 +106,45 @@ function displayResults(items, type) {
       description = item.overview || "No description available.";
     }
 
-    document.getElementById("output").innerHTML += `
-      <div class="media-card" onclick="openModal('${title}', '${meta}', '${cover}', '${description}')">
-        <div class="card-image">
-          <img src="${cover}" alt="${title} Cover">
-        </div>
-        <div class="card-info">
-          <div class="card-title">${title}</div>
-          <div class="card-meta">${meta}</div>
-        </div>
-      </div>`;
+    // Create card element
+    const mediaCard = document.createElement("div");
+    mediaCard.className = "media-card";
+    mediaCard.innerHTML = `
+      <div class="card-image">
+        <img src="${cover}" alt="${title} Cover">
+      </div>
+      <div class="card-info">
+        <div class="card-title">${title}</div>
+        <div class="card-meta">${meta}</div>
+      </div>
+    `;
+
+    // Attach click listener with item data
+    mediaCard.addEventListener("click", () => {
+      openModal(title, lang, meta, cover, description);
+    });
+
+    document.getElementById("output").appendChild(mediaCard);
   });
 }
 
-function openModal(title, meta, cover, description) {
+function openModal(title,lang, meta, cover, description) {
   const modal = document.getElementById("modal");
   const modalBody = document.getElementById("modal-body");
 
   modalBody.innerHTML = `
-    <h2>${title}</h2>
-    <p>${meta}</p>
-    <img src="${cover}" alt="${title} Cover" style="width: 100%; max-height: 300px; object-fit: cover;">
-    <p>${description}</p>
+      <div style='display :flex; height=100%'>
+          <div>
+          <img src="${cover}" alt="${title} " style="width: 100%; object-fit: cover;Cover" style="width: 100%; object-fit: cover;">
+          </div>
+          <div style='flex:1;margin-left:10px;'><h2 class>${title}</h2>
+
+          <p>${meta}</p>
+          <p>${lang}</p>
+          <p>${description}</p>
+          </div>
+      </div>
+    
   `;
 
   modal.style.display = "block";

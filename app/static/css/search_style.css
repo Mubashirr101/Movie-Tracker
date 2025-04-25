@@ -118,7 +118,17 @@ h1 {
     font-size: 0em;
   }
 }
+.close-button {
+  color: white;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
 
+.close-button:hover {
+  color: #bbb;
+}
 /* Modal Styles */
 .modal {
   display: none;
@@ -135,26 +145,22 @@ h1 {
 .modal-content {
   background-color: #1a1a1a;
   margin: 10% auto;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 500px;
+  padding-right: 10px;
+  border-radius: 20px;
+  width: 60%;
+  height: 65%;
   color: white;
 }
 
-.close-button {
-  color: white;
-  float: right;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close-button:hover {
-  color: #bbb;
+#modal-body {
+  height: 100%;
+  display: flex; /* Align image and text side by side */
 }
 
 #modal-body img {
-  margin: 10px 0;
-  border-radius: 10px;
+  margin: 0px;
+  border-radius: 20px 0 0 20px;
+  width: auto; /* Maintain aspect ratio */
+  height: 100%; /* Match the height of modal-content */
+  object-fit: cover; /* Ensure the image covers the area */
 }
