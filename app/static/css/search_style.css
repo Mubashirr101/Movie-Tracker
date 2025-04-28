@@ -147,7 +147,7 @@ h1 {
   margin: 10% auto;
   padding-right: 10px;
   border-radius: 20px;
-  width: 60%;
+  width: 53%;
   height: 65%;
   color: white;
 }
@@ -164,3 +164,9 @@ h1 {
   height: 100%; /* Match the height of modal-content */
   object-fit: cover; /* Ensure the image covers the area */
 }
+
+#modal-body h2 {
+  margin-top: 35px;
+  font-size: 18px;
+}
+
