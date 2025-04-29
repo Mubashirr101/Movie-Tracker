@@ -42,21 +42,36 @@ function fetchMovies(query) {
   fetch(
     `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
       query
-    )}&api_key=${TMDB_API_KEY}`
-  )
+    )}&api_key=${TMDB_API_KEY}`)
     .then((response) => response.json())
-    .then((data) => displayResults(data.results, "movie"))
+    .then(async(data) => {
+      const resultsWithCredits = await Promise.all(
+        data.results.map(async(movie) =>{
+          const credits = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/credits?api_key=${TMDB_API_KEY}`)
+          .then((res) => res.json())
+          .catch(() => ({cast :[],crew :[]}));
+        return {...movie,credits};
+        })
+      );
+      displayResults(resultsWithCredits, "movie");
+    })
     .catch((error) => console.log("Error fetching movies:", error));
 }
 
 function fetchShows(query) {
-  fetch(
-    `https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(
-      query
-    )}&api_key=${TMDB_API_KEY}`
-  )
+  fetch(`https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(query)}&api_key=${TMDB_API_KEY}`)
     .then((response) => response.json())
-    .then((data) => displayResults(data.results, "show"))
+    .then(async (data) => {
+      const resultsWithCredits = await Promise.all(
+        data.results.map(async (show) => {
+          const credits = await fetch(`https://api.themoviedb.org/3/tv/${show.id}/credits?api_key=${TMDB_API_KEY}`)
+            .then((res) => res.json())
+            .catch(() => ({ cast: [], crew: [] }));
+          return { ...show, credits };
+        })
+      );
+      displayResults(resultsWithCredits, "show");
+    })
     .catch((error) => console.log("Error fetching shows:", error));
 }
 
@@ -71,7 +86,7 @@ function displayResults(items, type) {
   }
 
   items.forEach((item) => {
-    console.log(item);
+    // console.log(item);
     let title = "";
     let cover = "";
     let meta = "";
@@ -84,13 +99,14 @@ function displayResults(items, type) {
       cover = item.cover_edition_key
         ? `https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`
         : "https://via.placeholder.com/150?text=No+Cover";
-      description = item.first_publish_year
+      year = item.first_publish_year
         ? `First Published: ${item.first_publish_year}`
         : "No additional details available.";
+      description = "blah blah blah"
     } else if (type === "movie") {
       title = item.title;
       date = item.release_date;
-      meta = `${date.split("-")[0] || ""}`;
+      year = `${date.split("-")[0] || ""}`;
       lang = item.original_language;
       cover = item.poster_path
         ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
@@ -122,18 +138,122 @@ function displayResults(items, type) {
 
     // Attach click listener with item data
     mediaCard.addEventListener("click", () => {
-      openModal(title,year,lang, meta, cover, description);
+      const creators = item.credits?.crew?.filter((member) => member.job === "Creator" || member.job === "Director").map((member) => member.name).slice(0,2) || [];
+      const cast = item.credits?.cast?.slice(0,3).map((actor)=>actor.name) || [];
+
+      openModal(type,title,year,lang, cover, description,creators,cast);
     });
 
     document.getElementById("output").appendChild(mediaCard);
   });
 }
 
-function openModal(title,year,lang, meta, cover, description) {
+function openModal(type,title,year,lang, cover, description, creators =[], cast = []) {
   const modal = document.getElementById("modal");
   const modalBody = document.getElementById("modal-body");
+  const creatorsHTML = creators.map(name=>`<p style = 'font-size:12px;'>${name}</p>`).join("");
+  const castHTML = cast.map(name=>`<p style = 'font-size:12px;'>${name}</p>`).join("");
+  // console.log(cast)
+  // console.log(creators)
+  // console.log(castHTML)
+  // console.log(creatorsHTML)
 
-  modalBody.innerHTML = `
+
+  if (type === "book") {
+    modalBody.innerHTML = `
+          <div style='display :flex; height=100%'>
+              <div>
+              <img src="${cover}" alt="${title} " style="width: 100%; object-fit: cover;">
+              </div>
+              <div style="flex:1;margin-left:10px;">
+              <h2>${title}</h2>
+              <div style="display:flex; justify-content:space-between; margin:0px;padding:5px; " class ="meta-box">
+              <p style=" margin:2px;"> TV-14 </p>
+              <p style=" margin:2px;" >${year}</p>
+              <p style=" margin:2px;" >${lang}</p>
+              <p style=" margin:2px;" > duration </p>
+              <p style=" margin:2px;" > genre1,genre2,genre3 </p>
+              </div>   
+              <div style="display:flex; justify-content:space-between; margin:0px;padding:5px; " class ="ratings-box">
+              <div style=" border: 2px solid white;border-radius: 7px;">
+              <p style=" margin:2px;"> ***** </p>
+              </div>
+              <p style=" margin:2px;" > IMDB </p>
+              <p style=" margin:2px;" > RT </p>
+              <p style=" margin:2px;" > trailer </p>
+              <div style="display:flex; justify-content:space-between; margin:0px;padding:0px; border: 2px solid white;border-radius: 7px; " class ="utility-box">
+              <p style=" margin:2px;">-</p>
+              <p style=" margin:2px;">|</p>
+              <p style=" margin:2px;">*</p>
+              </div>
+              </div>      
+              <div id="Overview">
+              <h3 style="font-size:14px;"> Overview </h3>
+              <p style="font-size:12px;">${description}</p>   
+              </div>
+              <div  style="display:flex;justify-content:space-between;">         
+              <h3 style="font-size:14px;"> Creators: </h3>
+              <p style="font-size:12px;"> Patric Mckay </p>
+              <p style="font-size:12px;"> John D Payne </p>
+              </div> 
+              <div style="display:flex;justify-content:space-between;"> 
+              <h3 style="font-size:14px;"> Casts: </h3>
+              <p style="font-size:12px;">Morfydd Clark</p> 
+              <p style="font-size:12px;">Charlie Victors</p> 
+              <p style="font-size:12px;">Charles Edwards</p> 
+              </div> 
+              </div>
+          </div>
+          `;        
+
+  } 
+  else if (type === "movie") {
+    modalBody.innerHTML = `
+        <div style='display :flex; height=100%;'>
+            <div>
+            <img src="${cover}" alt="${title} " style="width: 100%; object-fit: cover;">
+            </div>
+            <div style="flex:1;margin-left:10px;">
+            <h2>${title}</h2>
+            <div style="display:flex; justify-content:space-between; margin:0px;padding:5px; " class ="meta-box">
+            <p style=" margin:2px;"> TV-14 </p>
+            <p style=" margin:2px;" >${year}</p>
+            <p style=" margin:2px;" >${lang}</p>
+            <p style=" margin:2px;" > duration </p>
+            <p style=" margin:2px;" > genre1,genre2,genre3 </p>
+            </div>   
+            <div style="display:flex; justify-content:space-between; margin:0px;padding:5px; " class ="ratings-box">
+            <div style=" border: 2px solid white;border-radius: 7px;">
+            <p style=" margin:2px;"> ***** </p>
+            </div>
+            <p style=" margin:2px;" > IMDB </p>
+            <p style=" margin:2px;" > RT </p>
+            <p style=" margin:2px;" > trailer </p>
+            <div style="display:flex; justify-content:space-between; margin:0px;padding:0px; border: 2px solid white;border-radius: 7px; " class ="utility-box">
+            <p style=" margin:2px;">-</p>
+            <p style=" margin:2px;">|</p>
+            <p style=" margin:2px;">*</p>
+            </div>
+            </div>      
+            <div id="Overview">
+            <h3 style="font-size:14px;"> Overview </h3>
+            <p style="font-size:12px;">${description}</p>   
+            </div>
+            <div  style="display:flex;justify-content:space-between;">         
+            <h3 style="font-size:14px;"> Creators: </h3>
+            ${creatorsHTML}
+            </div> 
+            <div style="display:flex;justify-content:space-between;"> 
+            <h3 style="font-size:14px;"> Casts: </h3>
+            ${castHTML}
+            </div> 
+            </div>
+        </div>
+        `;        
+
+  }
+  else if (type === "show") {
+    modalBody.innerHTML = `
       <div style='display :flex; height=100%'>
           <div>
           <img src="${cover}" alt="${title} " style="width: 100%; object-fit: cover;">
@@ -166,19 +286,19 @@ function openModal(title,year,lang, meta, cover, description) {
           </div>
           <div  style="display:flex;justify-content:space-between;">         
           <h3 style="font-size:14px;"> Creators: </h3>
-          <p style="font-size:12px;"> Patric Mckay </p>
-          <p style="font-size:12px;"> John D Payne </p>
+          ${creatorsHTML}
           </div> 
           <div style="display:flex;justify-content:space-between;"> 
           <h3 style="font-size:14px;"> Casts: </h3>
-          <p style="font-size:12px;">Morfydd Clark</p> 
-          <p style="font-size:12px;">Charlie Victors</p> 
-          <p style="font-size:12px;">Charles Edwards</p> 
+          ${castHTML}           
           </div> 
           </div>
       </div>
     
-  `;
+  `;    
+  }
+
+  
 
   modal.style.display = "block";
 }
@@ -196,5 +316,5 @@ window.onclick = function (event) {
 };
 
 window.onload = chooseMedia;
-console.log("Width:", window.innerWidth);
-console.log("Height:", window.innerHeight);
+// console.log("Width:", window.innerWidth);
+// console.log("Height:", window.innerHeight);
