@@ -5,7 +5,9 @@ import os
 from app.services.tmdb import TMDB
 import requests
 
-TMDB_KEY = TMDB(app.config["TMDB_API_KEY"])
+load_dotenv()
+tmdb_key = os.getenv("TMDB_API_KEY")
+print(tmdb_key)
 
 
 @app.route("/")
@@ -67,6 +69,8 @@ def get_configuration():
 
 @app.route("/api/movie/<int:movie_id>")
 def get_movie(movie_id):
-    url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_KEY}&append_to_response=credits,release_dates"
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={tmdb_key}&append_to_response=credits,release_dates"
     response = requests.get(url)
+    print("route used")
+    print(response)
     return jsonify(response.json())
