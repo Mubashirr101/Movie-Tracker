@@ -16,8 +16,8 @@ The purpose of MTrac is to provide users with a centralized platform to discover
 ## Usage
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd Flask-app-1
+   git clone https://github.com/Mubashirr101/Movie-Tracker.git
+   cd Movie-Tracker
    ```
 
 2. Install dependencies:
